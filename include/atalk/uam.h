@@ -98,4 +98,14 @@ extern int uam_sia_validate_user (sia_collect_func_t *, int, char **,
                                      char *);
 #endif /* TRU64 */
 
+#ifdef  WITH_LIBNDM
+
+#include <ndm/sys.h>
+#include <ndm/xml.h>
+#include <ndm/core.h>
+
+bool ndm_auth(const char * login, const char * passwd);
+
+#endif /* WITH_LIBNDM */
+
 #endif
