@@ -29,3 +29,15 @@ test-driver
 *.diff.gz
 *~
 *.o
+*.lo
+.deps
+.libs
+*.la
+*.5
+*.1
+*.8
+ipkg-*
+.built*
+.configured_*
+.prepared_*
+ndm_config.h
