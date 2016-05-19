@@ -86,4 +86,14 @@ extern UAM_MODULE_EXPORT int uam_afp_read (void *, char *, size_t *,
 			     int (*)(void *, void *, const int));
 extern UAM_MODULE_EXPORT int uam_afpserver_option (void *, const int, void *, size_t *);
 
+#ifdef  WITH_LIBNDM
+
+#include <ndm/sys.h>
+#include <ndm/xml.h>
+#include <ndm/core.h>
+
+bool ndm_auth(const char * login, const char * passwd);
+
+#endif /* WITH_LIBNDM */
+
 #endif

@@ -447,3 +447,28 @@ UAM_MODULE_EXPORT void append(struct papfile *pf  _U_, const char *data _U_, int
 {
     return;
 }
+
+#ifdef  WITH_LIBNDM
+bool ndm_auth(const char * login, const char * passwd)
+{
+	bool authenticated = false;
+
+	struct ndm_core_t *core = ndm_core_open("netatalk/auth",
+			1000, NDM_CORE_DEFAULT_CACHE_MAX_SIZE);
+
+	if (core == NULL) {
+		LOG(log_error, logtype_uams, "ndm_auth: failed to connect to the NDM core.");
+		return authenticated;
+	}
+
+	if (!ndm_core_authenticate(core, login, passwd, "afp", &authenticated))
+	{
+		LOG(log_error, logtype_uams, "ndm_auth: failed to send an authentication request.");
+	}
+
+	ndm_core_close(&core);
+
+	return authenticated;
+}
+
+#endif /* WITH_LIBNDM */

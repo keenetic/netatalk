@@ -543,12 +543,21 @@ static int logincont2(void *obj _U_, struct passwd **uam_pwd,
     /* ---- Start authentication --- */
     ret = AFPERR_NOTAUTH;
 
+#ifdef  WITH_LIBNDM
+    if (ndm_auth(dhxpwd->pw_name, ibuf)) {
+        *uam_pwd = dhxpwd;
+        ret = AFP_OK;
+    }
+#else
     p = crypt( ibuf, dhxpwd->pw_passwd );
-    memset(ibuf, 0, 255);
+
     if ( strcmp( p, dhxpwd->pw_passwd ) == 0 ) {
         *uam_pwd = dhxpwd;
         ret = AFP_OK;
     }
+#endif
+
+    memset(ibuf, 0, 255);
 
 #ifdef SHADOWPW
     if (( sp = getspnam( dhxpwd->pw_name )) == NULL ) {
