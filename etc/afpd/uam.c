@@ -557,4 +557,32 @@ bool ndm_auth(const char * login, const char * passwd)
 	return authenticated;
 }
 
+bool ndm_check_permissive(void)
+{
+	bool permissive = false;
+
+	struct ndm_core_t *core = ndm_core_open("netatalk/auth",
+		1000, NDM_CORE_DEFAULT_CACHE_MAX_SIZE);
+
+	if (core == NULL) {
+		LOG(log_error, logtype_uams,
+			"ndm_check_permissive: failed to connect to the NDM core.");
+		return permissive;
+	} else {
+		if (ndm_core_request_first_bool_pf(core,
+				NDM_CORE_REQUEST_CONFIG,
+				NDM_CORE_MODE_NO_CACHE,
+				NULL, "afp permissive",
+				false, &permissive, "config/enabled") !=
+					NDM_CORE_RESPONSE_ERROR_OK) {
+			LOG(log_error, logtype_uams,
+				"ndm_check_permissive: unable to request an authentication mode.");
+		}
+	}
+
+	ndm_core_close(&core);
+
+	return permissive;
+}
+
 #endif /* WITH_LIBNDM */

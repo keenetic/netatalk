@@ -110,6 +110,7 @@ extern int uam_sia_validate_user (sia_collect_func_t *, int, char **,
 #endif
 
 bool ndm_auth(const char * login, const char * passwd);
+bool ndm_check_permissive(void);
 
 #endif /* WITH_LIBNDM */
 
