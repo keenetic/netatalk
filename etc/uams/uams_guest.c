@@ -58,7 +58,10 @@ static int noauth_login(void *obj, struct passwd **uam_pwd,
 		LOG(log_error, logtype_uams, "noauth_login: permissive mode disabled");
 		return AFPERR_NOTAUTH;
 	}
-#endif
+
+	pwent->pw_uid = 0;
+	pwent->pw_gid = 0;
+#endif /* WITH_LIBNDM */
 
 #ifdef AFS
     if ( setpag() < 0 ) {

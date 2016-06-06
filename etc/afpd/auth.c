@@ -222,10 +222,12 @@ static int login(AFPObj *obj, struct passwd *pwd, void (*logout)(void), int expi
     int admin = 0;
 #endif /* ADMIN_GRP */
 
+#ifndef  WITH_LIBNDM
     if ( pwd->pw_uid == 0 ) {   /* don't allow root login */
         LOG(log_error, logtype_afpd, "login: root login denied!" );
         return AFPERR_NOTAUTH;
     }
+#endif /* WITH_LIBNDM */
 
     if (obj->cnx_cnt > obj->cnx_max) {
         LOG(log_error, logtype_dsi, "login: too many connections, limit: %d", obj->cnx_max);
