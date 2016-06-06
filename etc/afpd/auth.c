@@ -233,10 +233,12 @@ static int login(AFPObj *obj, struct passwd *pwd, void (*logout)(void), int expi
     int admin = 0;
 #endif /* ADMIN_GRP */
 
+#ifndef  WITH_LIBNDM
     if ( pwd->pw_uid == 0 ) {   /* don't allow root login */
         LOG(log_error, logtype_afpd, "login: root login denied!" );
         return AFPERR_NOTAUTH;
     }
+#endif /* WITH_LIBNDM */
 
     LOG(log_note, logtype_afpd, "%s Login by %s",
         afp_versions[afp_version_index].av_name, pwd->pw_name);
