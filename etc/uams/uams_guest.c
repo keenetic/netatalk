@@ -54,11 +54,6 @@ static int noauth_login(void *obj, struct passwd **uam_pwd,
     }
 
 #ifdef  WITH_LIBNDM
-    if (!ndm_check_permissive()) {
-		LOG(log_error, logtype_uams, "noauth_login: permissive mode disabled");
-		return AFPERR_NOTAUTH;
-	}
-
 	pwent->pw_uid = 0;
 	pwent->pw_gid = 0;
 #endif /* WITH_LIBNDM */
