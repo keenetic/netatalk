@@ -205,13 +205,9 @@ struct passwd *uam_getname(void *private, char *name, const int len)
     char *p;
     size_t namelen, gecoslen = 0, pwnamelen = 0;
 
-    if ((pwent = getpwnam(name))) {
-#ifdef  WITH_LIBNDM
-		pwent->pw_uid = 0;
-		pwent->pw_gid = 0;
-#endif /* WITH_LIBNDM */
+    if ((pwent = getpwnam(name)))
         return pwent;
-    }
+
     /* if we have a NT domain name try with it */
     if (obj->options.addomain || (obj->options.ntdomain && obj->options.ntseparator)) {
         /* FIXME What about charset ? */
