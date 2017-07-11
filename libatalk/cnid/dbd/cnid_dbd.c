@@ -59,13 +59,13 @@ static void delay(int sec)
     select(0, NULL, NULL, NULL, &tv);
 }
 
-static int tsock_getfd(const char *host, const char *port)
+static int tsock_getfd(const char *host, const char *port, int* so_error)
 {
     int sock = -1;
     int attr;
     int err;
     struct addrinfo hints, *servinfo, *p;
-    int optval;
+    int optval = 0;
     socklen_t optlen = sizeof(optval);
 
     /* Prepare hint for getaddrinfo */
@@ -147,9 +147,9 @@ static int tsock_getfd(const char *host, const char *port)
                         LOG(log_error, logtype_cnid, "getfd: getsockopt error with CNID server %s: %s",
                             host, strerror(errno));
                     } else {
-                        errno = optval;
+                        *so_error = optval;
                         LOG(log_error, logtype_cnid, "getfd: getsockopt says: %s",
-                            strerror(errno));
+                            strerror(optval));
                     }
                     close(sock);
                     sock = -1;
@@ -171,9 +171,9 @@ static int tsock_getfd(const char *host, const char *port)
     freeaddrinfo(servinfo);
 
     if (p == NULL) {
-        errno = optval;
+        *so_error = optval;
         LOG(log_error, logtype_cnid, "tsock_getfd: no suitable network config from CNID server (%s:%s): %s",
-            host, port, strerror(errno));
+            host, port, strerror(optval));
         return -1;
     }
 
@@ -225,7 +225,7 @@ static int write_vec(int fd, struct iovec *iov, ssize_t towrite, int vecs)
 }
 
 /* --------------------- */
-static int init_tsock(CNID_bdb_private *db)
+static int init_tsock(CNID_bdb_private *db, int* err)
 {
     int fd;
     int len[DBD_NUM_OPEN_ARGS];
@@ -237,7 +237,7 @@ static int init_tsock(CNID_bdb_private *db)
     LOG(log_debug, logtype_cnid, "connecting to CNID server: %s:%s",
         vol->v_cnidserver, vol->v_cnidport);
 
-    if ((fd = tsock_getfd(vol->v_cnidserver, vol->v_cnidport)) < 0)
+    if ((fd = tsock_getfd(vol->v_cnidserver, vol->v_cnidport, err)) < 0)
         return -1;
 
     LOG(log_debug, logtype_cnid, "connecting volume '%s', path: %s, user: %s",
@@ -378,11 +378,12 @@ static int transmit(CNID_bdb_private *db, struct cnid_dbd_rqst *rqst, struct cni
 {
     time_t orig, t;
     int clean = 1; /* no errors so far - to prevent sleep on first try */
+    int err = 0;
 
     while (1) {
         if (db->fd == -1) {
             LOG(log_maxdebug, logtype_cnid, "transmit: connecting to cnid_dbd ...");
-            if ((db->fd = init_tsock(db)) < 0) {
+            if ((db->fd = init_tsock(db, &err)) < 0) {
                 goto transmit_fail;
             }
             if (db->notfirst) {
@@ -402,7 +403,7 @@ static int transmit(CNID_bdb_private *db, struct cnid_dbd_rqst *rqst, struct cni
             db->fd = -1; /* FD not valid... will need to reconnect */
         }
 
-        if (errno == ECONNREFUSED) { /* errno carefully injected in tsock_getfd */
+        if (err == ECONNREFUSED) {
             /* give up */
             LOG(log_error, logtype_cnid, "transmit: connection refused (volume %s)", db->vol->v_localname);
             return -1;
