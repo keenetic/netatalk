@@ -41,3 +41,6 @@ ipkg-*
 .configured_*
 .prepared_*
 ndm_config.h
+.dep_files
+ABOUT-NLS
+ChangeLog
