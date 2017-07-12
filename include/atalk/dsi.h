@@ -156,9 +156,9 @@ typedef struct DSI {
 #define DSI_AFP_LOGGED_OUT   (1 << 9) /* client called afp_logout, quit on next EOF from socket */
 
 /* basic initialization: dsi_init.c */
-extern DSI *dsi_init(AFPObj *obj, const char *hostname, const char *address, const char *port);
+extern DSI *dsi_init(AFPObj *obj, const char *hostname, const char *address, const char *port, const char* ifname);
 extern void dsi_setstatus (DSI *, char *, const size_t);
-extern int dsi_tcp_init(DSI *dsi, const char *hostname, const char *address, const char *port);
+extern int dsi_tcp_init(DSI *dsi, const char *hostname, const char *address, const char *port, const char* ifname);
 extern void dsi_free(DSI *dsi);
 
 /* in dsi_getsess.c */

@@ -300,6 +300,7 @@ iflist_done:
 
 static int dsi_tcp_listen(const char *address,
                           const char *port,
+                          const char *ifname,
                           struct addrinfo *hints,
                           DSI *dsi,
                           bool *psocket_err_afnotsup)
@@ -362,7 +363,22 @@ static int dsi_tcp_listen(const char *address,
         flag = 1;
         setsockopt(dsi->serversock, SOL_TCP, TCP_NODELAY, &flag, sizeof(flag));
 
-        ret = bind(dsi->serversock, p->ai_addr, p->ai_addrlen);
+        if (p->ai_family == AF_INET6)
+        {
+            struct sockaddr_in6 sin6;
+            memcpy(&sin6, p->ai_addr, p->ai_addrlen);
+
+            if (ifname && IN6_IS_ADDR_LINKLOCAL(&sin6.sin6_addr)) {
+                sin6.sin6_scope_id = if_nametoindex(ifname);
+            } else {
+                sin6.sin6_scope_id = 0;
+            }
+
+            ret = bind(dsi->serversock, (struct sockaddr *)&sin6, sizeof(sin6));
+        } else {
+            ret = bind(dsi->serversock, p->ai_addr, p->ai_addrlen); //bind fix
+        }
+
         if (ret == -1) {
             close(dsi->serversock);
             dsi->serversock = -1;
@@ -424,15 +440,16 @@ EC_CLEANUP:
  *
  * @returns 0 on success, -1 on failure
  */
-int dsi_tcp_init(DSI *dsi, const char *hostname, const char *inaddress, const char *inport)
+int dsi_tcp_init(DSI *dsi, const char *hostname, const char *inaddress, const char *inport, const char *ifname)
 {
+
     EC_INIT;
     int                err;
     char              *address = NULL, *port = NULL;
     struct addrinfo    hints, *servinfo, *p;
     bool               socket_err_afnotsup;
 
-    /* inaddress may be NULL */
+    /* inaddress, ifname may be NULL */
     AFP_ASSERT(dsi && hostname && inport);
 
     if (inaddress)
@@ -457,7 +474,7 @@ int dsi_tcp_init(DSI *dsi, const char *hostname, const char *inaddress, const ch
         hints.ai_family = AF_UNSPEC;
     }
 
-    ret = dsi_tcp_listen(address, port, &hints, dsi, &socket_err_afnotsup);
+    ret = dsi_tcp_listen(address, port, ifname, &hints, dsi, &socket_err_afnotsup);
     if (ret != 0) {
         if ((hints.ai_flags & AI_PASSIVE) &&
             (hints.ai_family == AF_INET6) &&
@@ -468,7 +485,7 @@ int dsi_tcp_init(DSI *dsi, const char *hostname, const char *inaddress, const ch
              */
             LOG(log_note, logtype_dsi, "IPv6 is disabled, try again with AF_UNSPEC");
             hints.ai_family = AF_UNSPEC;
-            ret = dsi_tcp_listen(address, port, &hints, dsi, &socket_err_afnotsup);
+            ret = dsi_tcp_listen(address, port, ifname, &hints, dsi, &socket_err_afnotsup);
         }
 
         if (ret != 0) {
