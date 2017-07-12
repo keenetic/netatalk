@@ -13,7 +13,7 @@
 #include <signal.h>
 #include <atalk/dsi.h>
 
-DSI *dsi_init(AFPObj *obj, const char *hostname, const char *address, const char *port)
+DSI *dsi_init(AFPObj *obj, const char *hostname, const char *address, const char *port, const char *ifname)
 {
     DSI		*dsi;
 
@@ -25,7 +25,7 @@ DSI *dsi_init(AFPObj *obj, const char *hostname, const char *address, const char
     dsi->dsireadbuf = obj->options.dsireadbuf;
 
     /* currently the only transport protocol that exists for dsi */
-    if (dsi_tcp_init(dsi, hostname, address, port) != 0) {
+    if (dsi_tcp_init(dsi, hostname, address, port, ifname) != 0) {
         free(dsi);
         dsi = NULL;
     }
