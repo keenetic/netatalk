@@ -108,7 +108,7 @@ int configinit(AFPObj *obj)
         EC_NULL( q = p = strdup(obj->options.listen) );
         EC_NULL( p = strtok_r(p, ", ", &savep) );
         while (p) {
-            if ((dsi = dsi_init(obj, obj->options.hostname, p, obj->options.port)) == NULL)
+            if ((dsi = dsi_init(obj, obj->options.hostname, p, obj->options.port, NULL)) == NULL)
                 break;
 
             status_init(obj, dsi);
@@ -160,7 +160,7 @@ int configinit(AFPObj *obj)
                         continue;
                     }
 
-                    if ((dsi = dsi_init(obj, obj->options.hostname, interfaddr, obj->options.port)) == NULL)
+                    if ((dsi = dsi_init(obj, obj->options.hostname, interfaddr, obj->options.port, p)) == NULL)
                         continue;
 
                     status_init(obj, dsi);
@@ -186,7 +186,7 @@ int configinit(AFPObj *obj)
      * network interaces for determining an IP we can advertise in DSIStatus
      */
     if (dsi == NULL) {
-        if ((dsi = dsi_init(obj, obj->options.hostname, NULL, obj->options.port)) == NULL)
+        if ((dsi = dsi_init(obj, obj->options.hostname, NULL, obj->options.port, NULL)) == NULL)
             EC_FAIL_LOG("no suitable network address found, use \"afp listen\" or \"afp interfaces\"", 0);
         status_init(obj, dsi);
         *next = dsi;
