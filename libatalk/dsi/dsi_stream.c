@@ -502,6 +502,8 @@ size_t dsi_stream_read(DSI *dsi, void *data, const size_t length)
               if (! (dsi->flags & DSI_DISCONNECTED)) {
                   LOG(log_error, logtype_dsi, "dsi_stream_read: len:%d, %s",
                       len, (len < 0) ? strerror(errno) : "unexpected EOF");
+                  LOG(log_warning, logtype_dsi, "dsi_stream_read: stored:%u, read_count:%u, flags:0x%x",
+                      stored, dsi->read_count, dsi->flags);
               }
               return 0;
           }
