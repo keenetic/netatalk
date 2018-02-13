@@ -296,7 +296,7 @@ static int do_check_ea_support(const struct vol *vol)
     if ((sys_setxattr(vol->v_path, eaname, eacontent, strlen(eacontent) + 1, 0)) == 0) {
         haseas = 1;
     } else {
-        LOG(log_warning, logtype_afpd, "volume \"%s\" does not support Extended Attributes or read-only volume",
+        LOG(log_debug, logtype_afpd, "volume \"%s\" does not support Extended Attributes or read-only volume",
             vol->v_localname);
         haseas = 0;
     }
