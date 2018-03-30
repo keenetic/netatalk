@@ -412,6 +412,7 @@ int afp_openfork(AFPObj *obj _U_, char *ibuf, size_t ibuflen _U_, char *rbuf, si
             break;
         case EROFS:
             ret = AFPERR_VLOCK;
+            goto openfork_err;
         case EMFILE :
         case ENFILE :
             ret = AFPERR_NFILE;

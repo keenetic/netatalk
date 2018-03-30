@@ -559,7 +559,7 @@ static int read_addir(void)
 */
 static cnid_t check_cnid(const char *name, cnid_t did, struct stat *st, int adfile_ok)
 {
-    int adflags = ADFLAGS_HF;
+    int adflags;
     int err;
     cnid_t db_cnid, ad_cnid;
     struct adouble ad;
