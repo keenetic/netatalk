@@ -169,7 +169,7 @@ EC_CLEANUP:
 int copy_file(int dirfd, const char *src, const char *dst, mode_t mode)
 {
     int    ret = 0;
-    int    sfd = -1;
+    int    sfd;
     int    dfd = -1;
 
 #ifdef HAVE_ATFUNCS
