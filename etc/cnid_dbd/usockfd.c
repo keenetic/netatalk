@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/select.h>
@@ -61,13 +62,11 @@ int tsockfd_create(char *host, char *port, int backlog)
         setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
 #endif
 
-#ifdef USE_TCP_NODELAY
 #ifndef SOL_TCP
 #define SOL_TCP IPPROTO_TCP
 #endif
         flag = 1;
         setsockopt(sockfd, SOL_TCP, TCP_NODELAY, &flag, sizeof(flag));
-#endif /* USE_TCP_NODELAY */
 
         if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
             close(sockfd);
