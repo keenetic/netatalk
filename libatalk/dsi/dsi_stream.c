@@ -275,13 +275,14 @@ ssize_t dsi_stream_write(DSI *dsi, void *data, const size_t length, int mode)
   ssize_t len;
   unsigned int flags;
 
-  dsi->in_write++;
   written = 0;
 
   LOG(log_maxdebug, logtype_dsi, "dsi_stream_write(send: %zd bytes): START", length);
 
   if (dsi->flags & DSI_DISCONNECTED)
       return -1;
+
+  dsi->in_write++;
 
   if (mode & DSI_MSG_MORE)
       flags = MSG_MORE;
