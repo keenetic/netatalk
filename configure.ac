@@ -241,35 +241,6 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 dnl --------------------- generate files
 AC_OUTPUT([Makefile
-	bin/Makefile
-	bin/ad/Makefile
-	bin/afppasswd/Makefile
-	bin/cnid/Makefile
-	bin/cnid/cnid2_create
-	bin/megatron/Makefile
-	bin/misc/Makefile
-	config/Makefile
-	config/pam/Makefile
-	contrib/Makefile
-	contrib/macusers/Makefile
-	contrib/macusers/macusers
-	contrib/shell_utils/Makefile
-	contrib/shell_utils/apple_dump
-	contrib/shell_utils/asip-status.pl
-	distrib/Makefile
-	distrib/config/Makefile
-	distrib/config/netatalk-config
-	distrib/initscripts/Makefile
-	distrib/m4/Makefile
-	doc/Makefile
-    doc/html.xsl
-    doc/man.xsl
-    doc/manual/Makefile
-    doc/manual/manual.xml
-    doc/manpages/Makefile
-    doc/manpages/man1/Makefile
-    doc/manpages/man5/Makefile
-    doc/manpages/man8/Makefile
 	etc/Makefile
 	etc/afpd/Makefile
 	etc/cnid_dbd/Makefile
@@ -297,33 +268,7 @@ AC_OUTPUT([Makefile
 	libatalk/unicode/charsets/Makefile
 	libatalk/util/Makefile
 	libatalk/vfs/Makefile
-	macros/Makefile
-	man/Makefile
-	man/man1/Makefile
-    man/man1/ad.1
-    man/man1/afpldaptest.1
-    man/man1/afppasswd.1
-    man/man1/afpstats.1
-    man/man1/apple_dump.1
-    man/man1/asip-status.pl.1
-    man/man1/dbd.1
-    man/man1/macusers.1
-    man/man1/netatalk-config.1
-    man/man1/uniconv.1
-	man/man5/Makefile
-    man/man5/afp.conf.5
-    man/man5/afp_signature.conf.5
-    man/man5/afp_voluuid.conf.5
-    man/man5/extmap.conf.5
-	man/man8/Makefile
-    man/man8/afpd.8
-    man/man8/cnid_dbd.8
-    man/man8/cnid_metad.8
-    man/man8/netatalk.8
-	test/Makefile
-	test/afpd/Makefile
-	],
-	[chmod a+x distrib/config/netatalk-config contrib/shell_utils/apple_*]
+	]
 )
 
 AC_NETATALK_LIBS_SUMMARY
