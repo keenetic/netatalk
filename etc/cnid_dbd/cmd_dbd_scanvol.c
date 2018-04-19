@@ -287,6 +287,7 @@ static int check_eafiles(const char *fname)
     struct ea ea;
     struct stat st;
     char *eaname;
+    char pathbuf[MAXPATHLEN + 1];
 
     if ((ret = ea_open(vol, fname, EA_RDWR, &ea)) != 0) {
         if (errno == ENOENT)
@@ -302,7 +303,7 @@ static int check_eafiles(const char *fname)
         dbd_log(LOGDEBUG, "EA: %s", (*ea.ea_entries)[count].ea_name);
         remove = 0;
 
-        eaname = ea_path(&ea, (*ea.ea_entries)[count].ea_name, 0);
+        eaname = ea_path(&ea, (*ea.ea_entries)[count].ea_name, 0, pathbuf);
 
         if (lstat(eaname, &st) != 0) {
             if (errno == ENOENT)

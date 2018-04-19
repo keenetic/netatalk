@@ -215,6 +215,6 @@ extern int ea_openat(const struct vol * restrict vol,
                      eaflags_t eaflags,
                      struct ea * restrict ea);
 extern int ea_close(struct ea * restrict ea);
-extern char *ea_path(const struct ea * restrict ea, const char * restrict eaname, int macname);
+extern char *ea_path(const struct ea * restrict ea, const char * restrict eaname, int macname, char * pathbuf);
 
 #endif /* ATALK_EA_H */
