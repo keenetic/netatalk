@@ -1,6 +1,6 @@
 # Makefile.am for top level of netatalk package
 
-SUBDIRS = include libatalk bin config etc contrib distrib doc man macros test
+SUBDIRS = include libatalk etc
 
 EXTRA_DIST = CONTRIBUTORS COPYRIGHT COPYING Dockerfile NEWS VERSION
 
