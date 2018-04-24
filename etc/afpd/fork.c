@@ -1087,8 +1087,8 @@ static int write_fork(AFPObj *obj, char *ibuf, size_t ibuflen _U_, char *rbuf, s
     uint16_t        ofrefnum;
     ssize_t         cc;
     DSI             *dsi = obj->dsi;
-    char            *rcvbuf = (char *)dsi->commands;
-    size_t          rcvbuflen = dsi->server_quantum;
+    char            *rcvbuf = (char *)dsi->buffer;
+    size_t          rcvbuflen = dsi->dsireadbuf * dsi->server_quantum;
 
     /* figure out parameters */
     ibuf++;
@@ -1230,8 +1230,8 @@ static int write_fork(AFPObj *obj, char *ibuf, size_t ibuflen _U_, char *rbuf, s
     return( AFP_OK );
 
 afp_write_err:
-    dsi_writeinit(dsi, rcvbuf, rcvbuflen);
-    dsi_writeflush(dsi);
+    dsi_writeinit(obj->dsi, rbuf, *rbuflen);
+    dsi_writeflush(obj->dsi);
 
     if (err != AFP_OK) {
         *rbuflen = 0;

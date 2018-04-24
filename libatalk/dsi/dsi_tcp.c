@@ -84,35 +84,12 @@ static void timeout_handler(int sig _U_)
 }
 
 /*!
- * Allocate DSI read buffer and read-ahead buffer
- */
-static void dsi_init_buffer(DSI *dsi)
-{
-    if ((dsi->commands = malloc(dsi->server_quantum)) == NULL) {
-        LOG(log_error, logtype_dsi, "dsi_init_buffer: OOM");
-        AFP_PANIC("OOM in dsi_init_buffer");
-    }
-
-    /* dsi_peek() read ahead buffer, default is 12 * 300k = 3,6 MB (Apr 2011) */
-    if ((dsi->buffer = malloc(dsi->dsireadbuf * dsi->server_quantum)) == NULL) {
-        LOG(log_error, logtype_dsi, "dsi_init_buffer: OOM");
-        AFP_PANIC("OOM in dsi_init_buffer");
-    }
-    dsi->start = dsi->buffer;
-    dsi->eof = dsi->buffer;
-    dsi->end = dsi->buffer + (dsi->dsireadbuf * dsi->server_quantum);
-}
-
-/*!
  * Free any allocated ressources of the master afpd DSI objects and close server socket
  */
 void dsi_free(DSI *dsi)
 {
     close(dsi->serversock);
     dsi->serversock = -1;
-
-    free(dsi->commands);
-    dsi->commands = NULL;
 
     free(dsi->buffer);
     dsi->buffer = NULL;
@@ -176,8 +153,6 @@ static pid_t dsi_tcp_open(DSI *dsi)
         }
 #endif
 
-        dsi_init_buffer(dsi);
-
         /* read in commands. this is similar to dsi_receive except
          * for the fact that we do some sanity checking to prevent
          * delinquent connections from causing mischief. */
@@ -216,7 +191,7 @@ static pid_t dsi_tcp_open(DSI *dsi)
         dsi->clientID = ntohs(dsi->header.dsi_requestID);
 
         /* make sure we don't over-write our buffers. */
-        dsi->cmdlen = min(ntohl(dsi->header.dsi_len), dsi->server_quantum);
+        dsi->cmdlen = min(ntohl(dsi->header.dsi_len), DSI_CMDSIZ);
 
         stored = 0;
         while (stored < dsi->cmdlen) {
