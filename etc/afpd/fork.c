@@ -758,10 +758,14 @@ static int read_file(const struct ofork *ofork, int eid, off_t offset, char *rbu
         *rbuflen = 0;
         return( AFPERR_PARAM );
     }
+
+    if ((size_t)cc < *rbuflen) {
+        *rbuflen = cc;
+        return AFPERR_EOF;
+    }
+
     *rbuflen = cc;
 
-    if ((size_t)cc < *rbuflen)
-        return AFPERR_EOF;
     return AFP_OK;
 }
 
