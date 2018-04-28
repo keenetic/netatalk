@@ -2265,8 +2265,8 @@ int afp_config_parse(AFPObj *AFPObj, char *processname)
         options->timeout = 4;
     if (options->sleep <= 4)
         options->disconnected = options->sleep = 4;
-    if (options->dsireadbuf < 6)
-        options->dsireadbuf = 6;
+    if (options->dsireadbuf < 2)
+        options->dsireadbuf = 2;
     if (options->volnamelen < 8)
         options->volnamelen = 8; /* max mangled volname "???#FFFF" */
     if (options->volnamelen > 255)
