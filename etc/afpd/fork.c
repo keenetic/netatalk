@@ -1027,12 +1027,12 @@ int flushfork(struct ofork *ofork)
 
     int err = 0, doflush = 0;
 
-//    if ( ad_data_fileno( ofork->of_ad ) != -1 &&
-//         fsync( ad_data_fileno( ofork->of_ad )) < 0 ) {
-//        LOG(log_error, logtype_afpd, "flushfork(%s): dfile(%d) %s",
-//            of_name(ofork), ad_data_fileno(ofork->of_ad), strerror(errno) );
-//        err = -1;
-//    }
+    if ( ad_data_fileno( ofork->of_ad ) != -1 &&
+         fsync( ad_data_fileno( ofork->of_ad )) < 0 ) {
+        LOG(log_error, logtype_afpd, "flushfork(%s): dfile(%d) %s",
+            of_name(ofork), ad_data_fileno(ofork->of_ad), strerror(errno) );
+        err = -1;
+    }
 
     if ( ad_reso_fileno( ofork->of_ad ) != -1 &&  /* HF */
          (ofork->of_flags & AFPFORK_RSRC)) {
@@ -1051,8 +1051,8 @@ int flushfork(struct ofork *ofork)
         if (doflush && ad_flush(ofork->of_ad) < 0)
             err = -1;
 
-//        if (fsync( ad_reso_fileno( ofork->of_ad )) < 0)
-//            err = -1;
+        if (fsync( ad_reso_fileno( ofork->of_ad )) < 0)
+            err = -1;
 
         if (err < 0)
             LOG(log_error, logtype_afpd, "flushfork(%s): hfile(%d) %s",
