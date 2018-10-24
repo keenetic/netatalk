@@ -546,8 +546,7 @@ bool ndm_auth(const char * login, const char * passwd)
 		return authenticated;
 	}
 
-	if (!ndm_core_authenticate(core, login, passwd,
-		__TARGET_REALM__, "afp", &authenticated))
+	if (!ndm_core_authenticate(core, login, passwd, "afp", &authenticated))
 	{
 		LOG(log_error, logtype_uams, "ndm_auth: failed to send an authentication request.");
 	}

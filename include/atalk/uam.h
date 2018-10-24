@@ -103,11 +103,6 @@ extern int uam_sia_validate_user (sia_collect_func_t *, int, char **,
 #include <ndm/sys.h>
 #include <ndm/xml.h>
 #include <ndm/core.h>
-#include "ndm_config.h"
-
-#ifndef  __TARGET_REALM__
-# define __TARGET_REALM__           "Undefined realm"
-#endif
 
 bool ndm_auth(const char * login, const char * passwd);
 
