@@ -121,7 +121,7 @@ it also defines lots of intermediate macros, just ignore those :-)
 #define SVALS(buf,pos) ((int16)SVAL(buf,pos))
 #define IVAL(buf,pos) (SVAL(buf,pos)|SVAL(buf,(pos)+2)<<16)
 #define IVALS(buf,pos) ((int32_t)IVAL(buf,pos))
-#define LVAL(buf,pos) (IVAL(buf,pos)|IVAL(buf,(pos)+4)<<32)
+#define LVAL(buf,pos) (IVAL(buf,pos)|((uint64_t)IVAL(buf,(pos)+4))<<32)
 #define LVALS(buf,pos) ((int64_t)LVAL(buf,pos))
 
 #define SSVALX(buf,pos,val) (CVAL_NC(buf,pos+1)=(unsigned char)((val)&0xFF),CVAL_NC(buf,pos)=(unsigned char)((val)>>8))
