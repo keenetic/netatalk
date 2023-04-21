@@ -29,6 +29,8 @@ test-driver
 *.diff.gz
 *~
 *.o
+**/.DS_Store
+build-aux
 *.lo
 .deps
 .libs
